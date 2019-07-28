@@ -528,6 +528,64 @@ class Convert {
     }
   }
 
+  static String interpretGroundOverlayOptions(Object o, GroundOverlayOptionsSink sink) {
+    final Map<?, ?> data = toMap(o);
+    final Object consumeTapEvents = data.get("consumeTapEvents");
+    if (consumeTapEvents != null) {
+      sink.setConsumeTapEvents(toBoolean(consumeTapEvents));
+    }
+    final Object anchorU = data.get("anchorU");
+    if (anchorU != null) {
+      sink.setAnchorU(toFloat(anchorU));
+    }
+    final Object anchorV = data.get("anchorV");
+    if (anchorV != null) {
+      sink.setAnchorV(toFloat(anchorV));
+    }
+    final Object bearing = data.get("bearing");
+    if (bearing != null) {
+      sink.setBearing(toFloat(bearing));
+    }
+    final Object bounds = data.get("bounds");
+    if (bounds != null) {
+      sink.setBounds(toLatLngBounds(bounds));
+    }
+    final Object height = data.get("height");
+    if (height != null) {
+      sink.setHeight(toFloat(height));
+    }
+    final Object image = data.get("image");
+    if (image != null) {
+      sink.setImage(toBitmapDescriptor(image));
+    }
+    final Object position = data.get("position");
+    if (position != null) {
+      sink.setPosition(toLatLng(position));
+    }
+    final Object transparency = data.get("transparency");
+    if (transparency != null) {
+      sink.setTransparency(toFloat(transparency));
+    }
+    final Object visible = data.get("visible");
+    if (visible != null) {
+      sink.setVisible(toBoolean(visible));
+    }
+    final Object width = data.get("width");
+    if (width != null) {
+      sink.setWidth(toFloat(width));
+    }
+    final Object zIndex = data.get("zIndex");
+    if (zIndex != null) {
+      sink.setZIndex(toFloat(zIndex));
+    }
+    final String groundOverlayId = (String) data.get("groundOverlayId");
+    if (groundOverlayId == null) {
+      throw new IllegalArgumentException("groundOverlayId was null");
+    } else {
+      return groundOverlayId;
+    }
+  }
+
   private static List<LatLng> toPoints(Object o) {
     final List<?> data = toList(o);
     final List<LatLng> points = new ArrayList<>(data.size());

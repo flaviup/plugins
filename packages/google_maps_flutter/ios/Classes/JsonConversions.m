@@ -27,6 +27,10 @@
                                     [FLTGoogleMapJsonConversions toDouble:data[1]]);
 }
 
++ (CLLocationDirection)toLocationDirection:(NSNumber*)data {
+  return data.doubleValue;
+}
+
 + (CGPoint)toPoint:(NSArray*)data {
   return CGPointMake([FLTGoogleMapJsonConversions toDouble:data[0]],
                      [FLTGoogleMapJsonConversions toDouble:data[1]]);
