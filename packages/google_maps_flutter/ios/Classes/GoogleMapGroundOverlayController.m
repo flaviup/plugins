@@ -33,7 +33,7 @@
     _groundOverlay = [GMSGroundOverlay groundOverlayWithPosition:position icon:image zoomLevel:1.0f];
     _mapView = mapView;
     _groundOverlayId = groundOverlayId;
-    _GroundOverlay.userData = @[ groundOverlayId ];
+    _groundOverlay.userData = @[ groundOverlayId ];
   }
   return self;
 }
@@ -191,10 +191,12 @@ static void InterpretGroundOverlayOptions(NSDictionary* data, id<FLTGoogleMapGro
 - (void)addGroundOverlays:(NSArray*)groundOverlaysToAdd {
   for (NSDictionary* groundOverlay in groundOverlaysToAdd) {
     CLLocationCoordinate2D position = [FLTGroundOverlaysController getPosition:groundOverlay];
+    UIImage* image = [FLTGroundOverlaysController getImage:groundOverlay];
     NSString* groundOverlayId = [FLTGroundOverlaysController getGroundOverlayId:groundOverlay];
     FLTGoogleMapGroundOverlayController* controller =
         [[FLTGoogleMapGroundOverlayController alloc] initGroundOverlayWithPosition:position
                                                                    groundOverlayId:groundOverlayId
+                                                                              icon: image
                                                                            mapView:_mapView];
     InterpretGroundOverlayOptions(groundOverlay, controller, _registrar);
     _groundOverlayIdToController[groundOverlayId] = controller;
@@ -242,6 +244,9 @@ static void InterpretGroundOverlayOptions(NSDictionary* data, id<FLTGoogleMapGro
 + (CLLocationCoordinate2D)getPosition:(NSDictionary*)groundOverlay {
   NSArray* position = groundOverlay[@"position"];
   return ToLocation(position);
+}
++ (UIImage*)getImage:(NSDictionary*)groundOverlay {
+  return groundOverlay[@"image"];
 }
 + (NSString*)getGroundOverlayId:(NSDictionary*)groundOverlay {
   return groundOverlay[@"groundOverlayId"];

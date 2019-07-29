@@ -107,6 +107,6 @@ class GroundOverlaysController {
     @SuppressWarnings("unchecked")
     private static String getGroundOverlayId(Object groundOverlay) {
         Map<String, Object> groundOverlayMap = (Map<String, Object>) groundOverlay;
-        return (String) GroundOverlayMap.get("groundOverlayId");
+        return (String) groundOverlayMap.get("groundOverlayId");
     }
 }

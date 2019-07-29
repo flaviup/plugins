@@ -47,7 +47,7 @@ class _GroundOverlayUpdates {
   }
 
   Set<GroundOverlay> groundOverlaysToAdd;
-  Set<GroundOverlay> groundOverlayIdsToRemove;
+  Set<GroundOverlayId> groundOverlayIdsToRemove;
   Set<GroundOverlay> groundOverlaysToChange;
 
   Map<String, dynamic> _toMap() {

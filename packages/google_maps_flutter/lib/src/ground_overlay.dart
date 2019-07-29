@@ -37,17 +37,17 @@ class GroundOverlay {
   const GroundOverlay({
     @required this.groundOverlayId,
     this.consumeTapEvents = false,
-    this.anchorU = 0.5f,
-    this.anchorV = 0.5f,
-    this.bearing = 0.0f,
-    this.bounds = LatLngBounds(0.0, 0.0),
-    this.height = 0.0f,
+    this.anchorU = 0.5,
+    this.anchorV = 0.5,
+    this.bearing = 0.0,
+    this.bounds = LatLngBounds(southwest: LatLng(0, 0), northeast: LatLng(0, 0)),
+    this.height = 0.0,
     this.image = null,
-    this.position = LatLng(0.0, 0.0),
-    this.transparency = 0.0f,
+    this.position = LatLng(0, 0),
+    this.transparency = 0.0,
     this.visible = true,
-    this.width = 0.0f,
-    this.zIndex = 0.0f,
+    this.width = 0.0,
+    this.zIndex = 0.0,
     this.onTap,
   });
 
@@ -59,28 +59,28 @@ class GroundOverlay {
   /// If this is false, [onTap] callback will not be triggered.
   final bool consumeTapEvents;
 
-  final float anchorU;
-  final float anchorV;
-  final float bearing;
+  final double anchorU;
+  final double anchorV;
+  final double bearing;
   final LatLngBounds bounds;
   /// The ground overlay's height in screen points.
-  final float height;
+  final double height;
   final BitmapDescriptor image;
   final LatLng position;
-  final float transparency;
+  final double transparency;
 
   /// True if the ground overlay is visible.
   final bool visible;
 
   /// The ground overlay's width in screen points.
-  final float width;
+  final double width;
 
   /// The z-index of the ground overlay, used to determine relative drawing order of
   /// map overlays.
   ///
   /// Overlays are drawn in order of z-index, so that lower values means drawn
   /// earlier, and thus appearing to be closer to the surface of the Earth.
-  final float zIndex;
+  final double zIndex;
 
   /// Callbacks to receive tap events for ground overlays placed on this map.
   final VoidCallback onTap;
@@ -89,17 +89,17 @@ class GroundOverlay {
   /// unless overwritten by the specified parameters.
   GroundOverlay copyWith({
     bool consumeTapEventsParam,
-    float anchorUParam,
-    float anchorVParam,
-    float bearingParam,
+    double anchorUParam,
+    double anchorVParam,
+    double bearingParam,
     LatLngBounds boundsParam,
-    float heightParam,
+    double heightParam,
     BitmapDescriptor imageParam,
     LatLng positionParam,
-    float transparencyParam,
+    double transparencyParam,
     bool visibleParam,
-    float widthParam,
-    float zIndexParam,
+    double widthParam,
+    double zIndexParam,
     VoidCallback onTapParam,
   }) {
     return GroundOverlay(

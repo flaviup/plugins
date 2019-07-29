@@ -1,5 +1,6 @@
 package io.flutter.plugins.googlemaps;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -21,27 +22,27 @@ class GroundOverlayController implements GroundOverlayOptionsSink {
     }
 
     @Override
-    void setAnchorU(float anchorU) {
+    public void setAnchorU(float anchorU) {
         //groundOverlay.setAnchor(anchorU, groundOverlay.getAnchorV());
     }
 
     @Override
-    void setAnchorV(float anchorV) {
+    public void setAnchorV(float anchorV) {
         //groundOverlay.setAnchor(groundOverlay.getAnchorU(), anchorV);
     }
 
     @Override
-    void setAnchor(float anchorU, float anchorV) {
+    public void setAnchor(float anchorU, float anchorV) {
         //groundOverlay.setAnchor(anchorU, anchorV);
     }
 
     @Override
-    void setBearing(float bearing) {
+    public void setBearing(float bearing) {
         groundOverlay.setBearing(bearing);
     }
 
     @Override
-    void setBounds(LatLngBounds bounds) {
+    public void setBounds(LatLngBounds bounds) {
         groundOverlay.setPositionFromBounds(bounds);
     }
 
@@ -57,29 +58,29 @@ class GroundOverlayController implements GroundOverlayOptionsSink {
     }
 
     @Override
-    void setImage(BitmapDescriptor imageDescriptor) {
+    public void setImage(BitmapDescriptor imageDescriptor) {
         groundOverlay.setImage(imageDescriptor);
     }
 
     @Override
-    void setPosition(LatLng location) {
+    public void setPosition(LatLng location) {
         groundOverlay.setPosition(location);
     }
 
     @Override
-    void setPosition(LatLng location, float width) {
+    public void setPosition(LatLng location, float width) {
         groundOverlay.setPosition(location);
         groundOverlay.setDimensions(width);
     }
 
     @Override
-    void setPosition(LatLng location, float width, float height) {
+    public void setPosition(LatLng location, float width, float height) {
         groundOverlay.setPosition(location);
         groundOverlay.setDimensions(width, height);
     }
 
     @Override
-    void setTransparency(float transparency) {
+    public void setTransparency(float transparency) {
         groundOverlay.setTransparency(transparency);
     }
 

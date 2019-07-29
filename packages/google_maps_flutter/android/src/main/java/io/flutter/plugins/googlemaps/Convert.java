@@ -197,6 +197,15 @@ class Convert {
     return data;
   }
 
+  static Object groundOverlayIdToJson(String groundOverlayId) {
+    if (groundOverlayId == null) {
+      return null;
+    }
+    final Map<String, Object> data = new HashMap<>(1);
+    data.put("groundOverlayId", groundOverlayId);
+    return data;
+  }
+
   static Object latLngToJson(LatLng latLng) {
     return Arrays.asList(latLng.latitude, latLng.longitude);
   }
