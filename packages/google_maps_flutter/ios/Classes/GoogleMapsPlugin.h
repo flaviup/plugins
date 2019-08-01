@@ -11,4 +11,5 @@
 #import "GoogleMapPolylineController.h"
 
 @interface FLTGoogleMapsPlugin : NSObject <FlutterPlugin>
++ (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar;
 @end
