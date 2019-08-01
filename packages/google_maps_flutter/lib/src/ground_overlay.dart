@@ -37,17 +37,17 @@ class GroundOverlay {
   const GroundOverlay({
     @required this.groundOverlayId,
     this.consumeTapEvents = false,
-    this.anchorU = 0.5,
-    this.anchorV = 0.5,
-    this.bearing = 0.0,
-    this.bounds = LatLngBounds(southwest: LatLng(0, 0), northeast: LatLng(0, 0)),
-    this.height = 0.0,
-    this.image = null,
-    this.position = LatLng(0, 0),
-    this.transparency = 0.0,
+    this.anchorU,
+    this.anchorV,
+    this.bearing,
+    this.bounds,
+    this.height,
+    @required this.image,
+    this.position,
+    this.transparency,
     this.visible = true,
-    this.width = 0.0,
-    this.zIndex = 0.0,
+    this.width,
+    this.zIndex,
     this.onTap,
   });
 
@@ -134,10 +134,10 @@ class GroundOverlay {
     addIfPresent('anchorU', anchorU);
     addIfPresent('anchorV', anchorV);
     addIfPresent('bearing', bearing);
-    addIfPresent('bounds', bounds);
+    addIfPresent('bounds', bounds?._toList());
     addIfPresent('height', height);
-    addIfPresent('image', image);
-    addIfPresent('position', position);
+    addIfPresent('image', image?._toJson());
+    addIfPresent('position', position?._toJson());
     addIfPresent('transparency', transparency);
     addIfPresent('visible', visible);
     addIfPresent('width', width);

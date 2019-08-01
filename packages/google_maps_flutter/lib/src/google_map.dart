@@ -39,6 +39,7 @@ class GoogleMap extends StatefulWidget {
     this.polygons,
     this.polylines,
     this.circles,
+    this.groundOverlays,
     this.onCameraMoveStarted,
     this.onCameraMove,
     this.onCameraIdle,
@@ -95,6 +96,9 @@ class GoogleMap extends StatefulWidget {
 
   /// Circles to be placed on the map.
   final Set<Circle> circles;
+
+  /// Ground overlays to be placed on the map.
+  final Set<GroundOverlay> groundOverlays;
 
   /// Called when the camera starts moving.
   ///
@@ -187,6 +191,7 @@ class _GoogleMapState extends State<GoogleMap> {
   Map<PolygonId, Polygon> _polygons = <PolygonId, Polygon>{};
   Map<PolylineId, Polyline> _polylines = <PolylineId, Polyline>{};
   Map<CircleId, Circle> _circles = <CircleId, Circle>{};
+  Map<GroundOverlayId, GroundOverlay> _groundOverlays = <GroundOverlayId, GroundOverlay>{};
   _GoogleMapOptions _googleMapOptions;
 
   @override
@@ -198,6 +203,7 @@ class _GoogleMapState extends State<GoogleMap> {
       'polygonsToAdd': _serializePolygonSet(widget.polygons),
       'polylinesToAdd': _serializePolylineSet(widget.polylines),
       'circlesToAdd': _serializeCircleSet(widget.circles),
+      'groundOverlaysToAdd': _serializeGroundOverlaySet(widget.groundOverlays),
     };
     if (defaultTargetPlatform == TargetPlatform.android) {
       return AndroidView(
@@ -229,6 +235,7 @@ class _GoogleMapState extends State<GoogleMap> {
     _polygons = _keyByPolygonId(widget.polygons);
     _polylines = _keyByPolylineId(widget.polylines);
     _circles = _keyByCircleId(widget.circles);
+    _groundOverlays = _keyByGroundOverlayId(widget.groundOverlays);
   }
 
   @override
@@ -239,6 +246,7 @@ class _GoogleMapState extends State<GoogleMap> {
     _updatePolygons();
     _updatePolylines();
     _updateCircles();
+    _updateGroundOverlays();
   }
 
   void _updateOptions() async {
@@ -281,6 +289,13 @@ class _GoogleMapState extends State<GoogleMap> {
     _circles = _keyByCircleId(widget.circles);
   }
 
+  void _updateGroundOverlays() async {
+    final GoogleMapController controller = await _controller.future;
+    controller._updateGroundOverlays(
+        _GroundOverlayUpdates.from(_groundOverlays.values.toSet(), widget.groundOverlays));
+    _groundOverlays = _keyByGroundOverlayId(widget.groundOverlays);
+  }
+
   Future<void> onPlatformViewCreated(int id) async {
     final GoogleMapController controller = await GoogleMapController.init(
       id,
@@ -319,6 +334,12 @@ class _GoogleMapState extends State<GoogleMap> {
     assert(circleIdParam != null);
     final CircleId circleId = CircleId(circleIdParam);
     _circles[circleId].onTap();
+  }
+
+  void onGroundOverlayTap(String groundOverlayIdParam) {
+    assert(groundOverlayIdParam != null);
+    final GroundOverlayId groundOverlayId = GroundOverlayId(groundOverlayIdParam);
+    _groundOverlays[groundOverlayId].onTap();
   }
 
   void onInfoWindowTap(String markerIdParam) {

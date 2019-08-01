@@ -69,6 +69,9 @@ class GoogleMapController {
       case 'circle#onTap':
         _googleMapState.onCircleTap(call.arguments['circleId']);
         break;
+      case 'groundOverlay#onTap':
+        _googleMapState.onGroundOverlayTap(call.arguments['groundOverlayId']);
+        break;
       case 'map#onTap':
         _googleMapState.onTap(LatLng._fromJson(call.arguments['position']));
         break;
@@ -150,6 +153,20 @@ class GoogleMapController {
     await channel.invokeMethod<void>(
       'circles#update',
       circleUpdates._toMap(),
+    );
+  }
+
+  /// Updates ground overlay configuration.
+  ///
+  /// Change listeners are notified once the update has been made on the
+  /// platform side.
+  ///
+  /// The returned [Future] completes after listeners have been notified.
+  Future<void> _updateGroundOverlays(_GroundOverlayUpdates groundOverlayUpdates) async {
+    assert(groundOverlayUpdates != null);
+    await channel.invokeMethod<void>(
+      'groundOverlays#update',
+      groundOverlayUpdates._toMap(),
     );
   }
 
