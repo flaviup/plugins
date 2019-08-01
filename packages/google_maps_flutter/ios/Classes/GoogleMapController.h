@@ -8,6 +8,7 @@
 #import "GoogleMapMarkerController.h"
 #import "GoogleMapPolygonController.h"
 #import "GoogleMapPolylineController.h"
+#import "GoogleMapGroundOverlayController.h"
 
 // Defines map UI options writable from Flutter.
 @protocol FLTGoogleMapOptionsSink

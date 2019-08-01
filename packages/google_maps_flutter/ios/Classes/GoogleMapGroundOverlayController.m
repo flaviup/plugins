@@ -87,11 +87,17 @@
 }
 @end
 
-static int ToInt(NSNumber* data) { return [FLTGoogleMapJsonConversions toInt:data]; }
+static int ToInt(NSNumber* data) {
+  return [FLTGoogleMapJsonConversions toInt:data];
+}
 
-static int ToFloat(NSNumber* data) { return [FLTGoogleMapJsonConversions toFloat:data]; }
+static int ToFloat(NSNumber* data) {
+  return [FLTGoogleMapJsonConversions toFloat:data];
+}
 
-static BOOL ToBool(NSNumber* data) { return [FLTGoogleMapJsonConversions toBool:data]; }
+static BOOL ToBool(NSNumber* data) {
+  return [FLTGoogleMapJsonConversions toBool:data];
+}
 
 static CLLocationCoordinate2D ToLocation(NSArray* data) {
   return [FLTGoogleMapJsonConversions toLocation:data];
@@ -101,14 +107,23 @@ static CLLocationDirection ToLocationDirection(NSNumber* data) {
   return [FLTGoogleMapJsonConversions toLocationDirection:data];
 }
 
+static GMSCoordinateBounds* ToBounds(NSArray* data) {
+  return [FLTGoogleMapJsonConversions toBounds:data];
+}
+
 static CLLocationDistance ToDistance(NSNumber* data) {
   return [FLTGoogleMapJsonConversions toFloat:data];
 }
 
-static UIColor* ToColor(NSNumber* data) { return [FLTGoogleMapJsonConversions toColor:data]; }
+static UIColor* ToColor(NSNumber* data) {
+  return [FLTGoogleMapJsonConversions toColor:data];
+}
 
-static void InterpretGroundOverlayOptions(NSDictionary* data, id<FLTGoogleMapGroundOverlayOptionsSink> sink,
-                                   NSObject<FlutterPluginRegistrar>* registrar) {
+static UIImage* ToImage(NSArray* data) {
+  return [FLTGoogleMapJsonConversions toImage:data];
+}
+
+static void InterpretGroundOverlayOptions(NSDictionary* data, id<FLTGoogleMapGroundOverlayOptionsSink> sink, NSObject<FlutterPluginRegistrar>* registrar) {
   NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
   if (consumeTapEvents) {
     [sink setConsumeTapEvents:ToBool(consumeTapEvents)];
@@ -129,9 +144,9 @@ static void InterpretGroundOverlayOptions(NSDictionary* data, id<FLTGoogleMapGro
     [sink setBearing:ToLocationDirection(bearing)];
   }
 
-  GMSCoordinateBounds* bounds = data[@"bounds"];
+  NSArray* bounds = data[@"bounds"];
   if (bounds) {
-    [sink setBounds:bounds];
+    [sink setBounds:ToBounds(bounds)];
   }
 
   NSNumber* height = data[@"height"];
@@ -139,9 +154,9 @@ static void InterpretGroundOverlayOptions(NSDictionary* data, id<FLTGoogleMapGro
     [sink setHeight:ToFloat(height)];
   }
 
-  UIImage* image = data[@"image"];
+  NSArray* image = data[@"image"];
   if (image) {
-    [sink setImage:image];
+    [sink setImage:ToImage(image)];
   }
 
   NSArray* position = data[@"position"];
@@ -190,14 +205,14 @@ static void InterpretGroundOverlayOptions(NSDictionary* data, id<FLTGoogleMapGro
 }
 - (void)addGroundOverlays:(NSArray*)groundOverlaysToAdd {
   for (NSDictionary* groundOverlay in groundOverlaysToAdd) {
-    CLLocationCoordinate2D position = [FLTGroundOverlaysController getPosition:groundOverlay];
+    GMSCoordinateBounds* bounds = [FLTGroundOverlaysController getBounds:groundOverlay];
     UIImage* image = [FLTGroundOverlaysController getImage:groundOverlay];
     NSString* groundOverlayId = [FLTGroundOverlaysController getGroundOverlayId:groundOverlay];
     FLTGoogleMapGroundOverlayController* controller =
-        [[FLTGoogleMapGroundOverlayController alloc] initGroundOverlayWithPosition:position
-                                                                   groundOverlayId:groundOverlayId
-                                                                              icon: image
-                                                                           mapView:_mapView];
+        [[FLTGoogleMapGroundOverlayController alloc] initGroundOverlayWithBounds:bounds
+                                                                 groundOverlayId:groundOverlayId
+                                                                            icon:image
+                                                                         mapView:_mapView];
     InterpretGroundOverlayOptions(groundOverlay, controller, _registrar);
     _groundOverlayIdToController[groundOverlayId] = controller;
   }
@@ -241,12 +256,17 @@ static void InterpretGroundOverlayOptions(NSDictionary* data, id<FLTGoogleMapGro
   }
   [_methodChannel invokeMethod:@"groundOverlay#onTap" arguments:@{@"groundOverlayId" : groundOverlayId}];
 }
++ (GMSCoordinateBounds*)getBounds:(NSDictionary*)groundOverlay {
+  NSArray* bounds = groundOverlay[@"bounds"];
+  return ToBounds(bounds);
+}
 + (CLLocationCoordinate2D)getPosition:(NSDictionary*)groundOverlay {
   NSArray* position = groundOverlay[@"position"];
   return ToLocation(position);
 }
 + (UIImage*)getImage:(NSDictionary*)groundOverlay {
-  return groundOverlay[@"image"];
+  NSArray* image = groundOverlay[@"image"];
+  return ToImage(image);
 }
 + (NSString*)getGroundOverlayId:(NSDictionary*)groundOverlay {
   return groundOverlay[@"groundOverlayId"];

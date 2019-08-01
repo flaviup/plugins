@@ -31,6 +31,11 @@
   return data.doubleValue;
 }
 
++ (GMSCoordinateBounds*)toBounds:(NSArray*)data {
+  return [[GMSCoordinateBounds alloc] initWithCoordinate:[FLTGoogleMapJsonConversions toLocation:((NSArray*)data[0])]
+                                              coordinate:[FLTGoogleMapJsonConversions toLocation:((NSArray*)data[1])]];
+}
+
 + (CGPoint)toPoint:(NSArray*)data {
   return CGPointMake([FLTGoogleMapJsonConversions toDouble:data[0]],
                      [FLTGoogleMapJsonConversions toDouble:data[1]]);
@@ -60,6 +65,19 @@
   }
 
   return points;
+}
+
++ (UIImage*)toImage:(NSArray*)data {
+  NSString* dataType = (NSString*)data[0];
+
+  if ([dataType isEqualToString:@"fromBytes"]) {
+    FlutterStandardTypedData* flutterData = (FlutterStandardTypedData*)data[1];
+    return [UIImage imageWithData:[flutterData data]];
+  } else if ([dataType isEqualToString:@"fromAssets"]) {
+    // TODO: implementation
+  }
+
+  return nil;
 }
 
 @end
