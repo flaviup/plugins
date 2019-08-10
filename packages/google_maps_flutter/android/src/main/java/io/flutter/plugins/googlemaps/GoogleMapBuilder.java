@@ -4,15 +4,50 @@
 
 package io.flutter.plugins.googlemaps;
 
+import android.Manifest;
 import android.content.Context;
 import android.graphics.Rect;
+import android.content.pm.PackageManager;
+import android.util.Log;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLngBounds;
 import io.flutter.plugin.common.PluginRegistry;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static io.flutter.plugins.googlemaps.GoogleMapController.MY_LOCATION_REQUEST_CODE;
+
 class GoogleMapBuilder implements GoogleMapOptionsSink {
+
+  private static final String TAG = "GoogleMapBuilder";
+
+  private static GoogleMapController mapController;
+  private static final PluginRegistry.RequestPermissionsResultListener requestPermissionsResultListener = new PluginRegistry.RequestPermissionsResultListener() {
+    @Override
+    public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+      if (requestCode == MY_LOCATION_REQUEST_CODE) {
+        if (grantResults == null ||
+                grantResults.length == 0 ||
+                permissions == null ||
+                permissions.length == 0 ||
+                !permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) ||
+                grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+          Log.i(TAG, "Permission has been denied by user");
+        } else {
+          Log.i(TAG, "Permission has been granted by user");
+
+          if (mapController != null) {
+            mapController.updateMyLocationSettings();
+          }
+        }
+
+        return true;
+      }
+
+      return false;
+    }
+  };
+
   private final GoogleMapOptions options = new GoogleMapOptions();
   private boolean trackCameraPosition = false;
   private boolean myLocationEnabled = false;
@@ -40,6 +75,13 @@ class GoogleMapBuilder implements GoogleMapOptionsSink {
     controller.setInitialCircles(initialCircles);
     controller.setInitialGroundOverlays(initialGroundOverlays);
     controller.setPadding(padding.top, padding.left, padding.bottom, padding.right);
+    boolean requestPermissionsResultListenerAdded = mapController != null;
+    mapController = controller;
+
+    if (!requestPermissionsResultListenerAdded) {
+      registrar.addRequestPermissionsResultListener(requestPermissionsResultListener);
+    }
+
     return controller;
   }
 

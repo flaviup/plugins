@@ -14,12 +14,16 @@ import static io.flutter.plugins.googlemaps.GoogleMapsPlugin.STOPPED;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -65,6 +69,7 @@ final class GoogleMapController
         PlatformView {
 
   private static final String TAG = "GoogleMapController";
+  static final int MY_LOCATION_REQUEST_CODE = 101;
   private final int id;
   private final AtomicInteger activityState;
   private final MethodChannel methodChannel;
@@ -653,7 +658,7 @@ final class GoogleMapController
   }
 
   @SuppressLint("MissingPermission")
-  private void updateMyLocationSettings() {
+  void updateMyLocationSettings() {
     if (hasLocationPermission()) {
       // The plugin doesn't add the location permission by default so that apps that don't need
       // the feature won't require the permission.
@@ -666,6 +671,7 @@ final class GoogleMapController
       // TODO(amirh): Make the options update fail.
       // https://github.com/flutter/flutter/issues/24327
       Log.e(TAG, "Cannot enable MyLocation layer as location permissions are not granted");
+      setupPermissions();
     }
   }
 
@@ -682,6 +688,34 @@ final class GoogleMapController
     }
     return context.checkPermission(
         permission, android.os.Process.myPid(), android.os.Process.myUid());
+  }
+
+  private void setupPermissions() {
+
+    int permission = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
+
+    if (permission != PackageManager.PERMISSION_GRANTED) {
+
+      if (ActivityCompat.shouldShowRequestPermissionRationale(registrar.activity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(registrar.activity());
+        builder.setMessage("Permission to access your location is required.")
+                .setTitle("Permission required")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int id) {
+                    Log.i(TAG, "Accepted to ask for permission to access location.");
+                    requestPermissions();
+                  }
+                })
+                .create()
+                .show();
+      } else {
+        requestPermissions();
+      }
+    }
+  }
+
+  private void requestPermissions() {
+    ActivityCompat.requestPermissions(registrar.activity(), new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, MY_LOCATION_REQUEST_CODE);
   }
 
   public void setIndoorEnabled(boolean indoorEnabled) {
