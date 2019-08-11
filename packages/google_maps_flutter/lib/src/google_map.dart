@@ -180,10 +180,10 @@ class GoogleMap extends StatefulWidget {
   final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers;
 
   @override
-  State createState() => _GoogleMapState();
+  GoogleMapState createState() => GoogleMapState();
 }
 
-class _GoogleMapState extends State<GoogleMap> {
+class GoogleMapState extends State<GoogleMap> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
@@ -362,6 +362,16 @@ class _GoogleMapState extends State<GoogleMap> {
     if (widget.onLongPress != null) {
       widget.onLongPress(position);
     }
+  }
+
+  Future<void> animateCamera(CameraUpdate cameraUpdate) async {
+    final controller = await _controller.future;
+    await controller.animateCamera(cameraUpdate);
+  }
+
+  Future<void> moveCamera(CameraUpdate cameraUpdate) async {
+    final controller = await _controller.future;
+    await controller.moveCamera(cameraUpdate);
   }
 }
 

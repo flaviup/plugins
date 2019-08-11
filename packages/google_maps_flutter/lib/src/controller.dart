@@ -17,7 +17,7 @@ class GoogleMapController {
   static Future<GoogleMapController> init(
     int id,
     CameraPosition initialCameraPosition,
-    _GoogleMapState googleMapState,
+    GoogleMapState googleMapState,
   ) async {
     assert(id != null);
     final MethodChannel channel =
@@ -33,7 +33,7 @@ class GoogleMapController {
   @visibleForTesting
   final MethodChannel channel;
 
-  final _GoogleMapState _googleMapState;
+  final GoogleMapState _googleMapState;
 
   Future<dynamic> _handleMethodCall(MethodCall call) async {
     switch (call.method) {
